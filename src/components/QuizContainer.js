@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { questions } from "../utils/constants";
 import { correctAnswer } from "../utils/constants";
+import { MdOutlineRefresh } from "react-icons/md";
 
 const QuizContainer = () => {
 
@@ -26,16 +27,24 @@ const QuizContainer = () => {
            count++;
          }
     })
-    console.log(count);
+    setShowAns(!showAns);
     setCorrect(count);
-    console.log(correct);
+  }
+
+  const handleRefresh=()=>{
+    setCurrentIndex(0);
+    setShowAns(!showAns);
+    setCurrentQues(ques[0]);
+    setMarkedAns([]);
   }
 
   return (
     <div className="h-[100vh] w-[100vw] bg-slate-700 flex justify-center pt-16">
       <div className="border h-[70%] w-[70%] flex flex-col items-center justify-center">
         {currentIndex >= ques.length ? (
-            <button onClick={submitAns}>Submit</button>
+            <>
+             {!showAns?<button onClick={submitAns} className="text-white text-[20px] font-semibold border bg-slate-500 px-2 py-1 rounded">Submit</button>:<h1 className="flex items-center  justify-center text-white text-[20px] font-semibold">{`Hello vinod your score is ${correct}`} <MdOutlineRefresh onClick={handleRefresh} className="ml-4 cursor-pointer"/> </h1>}
+            </>
         ) : (
          
           <div>
