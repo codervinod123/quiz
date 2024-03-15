@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { questions } from "../utils/constants";
 import { correctAnswer } from "../utils/constants";
 import { MdOutlineRefresh } from "react-icons/md";
+import DetailAnswer from "./DetailAnswer";
 
 const QuizContainer = () => {
 
@@ -11,6 +12,7 @@ const QuizContainer = () => {
   const [markedAns,setMarkedAns]=useState([]);
   const [correct,setCorrect]=useState(0);
   const [showAns,setShowAns]=useState(false);
+  const [showDetails,setShowDetails]=useState(false);
 
 
   const handleNextClick = (opt) => {
@@ -22,14 +24,15 @@ const QuizContainer = () => {
 
   const submitAns=()=>{
     var count=0;
-    correctAnswer.forEach((corretAns,index)=>{
-         if(corretAns==markedAns[index]){
+     markedAns.forEach((corretAns)=>{
+         if(corretAns.answer==true){
            count++;
          }
     })
     setShowAns(!showAns);
     setCorrect(count);
   }
+
 
   const handleRefresh=()=>{
     setCurrentIndex(0);
@@ -38,12 +41,26 @@ const QuizContainer = () => {
     setMarkedAns([]);
   }
 
+  const handleShowDetails=()=>{
+     setShowDetails(!showDetails);
+  }
+
+
   return (
     <div className="h-[100vh] w-[100vw] bg-slate-700 flex justify-center pt-16">
       <div className="border h-[70%] w-[70%] flex flex-col items-center justify-center">
+        {!showDetails?(
+        <>
         {currentIndex >= ques.length ? (
             <>
-             {!showAns?<button onClick={submitAns} className="text-white text-[20px] font-semibold border bg-slate-500 px-2 py-1 rounded">Submit</button>:<h1 className="flex items-center  justify-center text-white text-[20px] font-semibold">{`Hello vinod your score is ${correct}`} <MdOutlineRefresh onClick={handleRefresh} className="ml-4 cursor-pointer"/> </h1>}
+             {!showAns?
+              <button onClick={submitAns} className="text-white text-[20px] font-semibold border bg-slate-500 px-2 py-1 rounded">Submit</button>
+              :
+              <div className="flex items-center  justify-center text-white text-[20px] font-semibold">
+                {`Hello vinod your score is ${correct}`} 
+                 <MdOutlineRefresh onClick={handleRefresh} className="ml-4 cursor-pointer"/> 
+                 <button onClick={handleShowDetails}>Show Detail</button>
+              </div>}
             </>
         ) : (
          
@@ -58,7 +75,7 @@ const QuizContainer = () => {
                 return (
                   <button
                     key={index}
-                    onClick={() => handleNextClick(option.opt)}
+                    onClick={() => handleNextClick(option)}
                     className="text-white text-[20px] font-semibold px-4 py-1 bg-slate-500 rounded"
                   >
                     {option.opt}
@@ -68,6 +85,12 @@ const QuizContainer = () => {
             </div>
           </div>
         )}
+        </>
+        ):
+        (
+           <DetailAnswer ques={ques} markedAns={markedAns}/>
+        )
+        }
       </div>
     </div>
   );
